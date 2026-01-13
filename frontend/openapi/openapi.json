@@ -1,0 +1,25 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Dev Website API",
+    "version": "1.0.0",
+    "description": "Backend API for Dev Website"
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "API Server"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
