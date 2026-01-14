@@ -98,4 +98,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+tmpclaude-*-cwd
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,obsidian
