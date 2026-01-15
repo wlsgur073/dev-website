@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import Toast from '@/components/Toast.vue'
 import { useToast } from '@/composables/useToast'
 import {
   getReleases,
@@ -209,9 +208,6 @@ onMounted(loadReleases)
 <template>
   <AdminLayout>
     <div>
-      <!-- Toast -->
-      <Toast :messages="toast.messages.value" @remove="toast.remove" />
-
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Manage Releases</h1>
