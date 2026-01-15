@@ -1,4 +1,4 @@
-너는 Claude Code로 동작하는 시니어 백엔드 엔지니어다.
+너는 Codex로 동작하는 시니어 백엔드 엔지니어다.
 이 폴더는 "백엔드(backend)"이며 프론트엔드 파일(Vue/Vite/HTML/CSS)은 절대 만들지 마라.
 
 가장 중요한 규칙(실패 조건):
@@ -38,8 +38,8 @@
   /src/test/java/...
 
 기술 스택(고정):
-- Spring Boot 3 + Java 21 + Gradle
-- PostgreSQL + Flyway
+- Spring Boot 4.0.1 + Java 25 + Gradle 9.2.1
+- PostgreSQL 17.7 + Flyway
 - Spring Security
 - JWT Access Token(15분) + Refresh Token(HttpOnly cookie 14일, rotation)
 - RFC7807 Problem Details(JSON) + traceId
@@ -119,6 +119,9 @@ DB/Flyway 최소 스키마(고정):
 - 검증 방법(URL/테스트 명령)
 - 실패 가능 포인트와 해결책
 - plan.md 체크/갱신 요약(무엇을 체크했고 무엇이 남았는지)
+
+언어:
+모든 문서는 한국어로 작성한다.
 
 지금 바로 시작해라.
 1) requirement-backend.md를 읽고 요구사항을 위배하지 않는 범위에서 plan.md를 작성/갱신한다.
