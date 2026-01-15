@@ -12,6 +12,7 @@ Vue 3 + TypeScript + Vite 기반 프론트엔드 애플리케이션
 - **Routing**: Vue Router
 - **HTTP Client**: Axios
 - **Icons**: Heroicons
+- **Markdown**: markdown-it + Shiki (코드 하이라이트)
 
 ## 시작하기
 
@@ -25,9 +26,13 @@ Vue 3 + TypeScript + Vite 기반 프론트엔드 애플리케이션
 ```bash
 # 의존성 설치
 pnpm install
+# 또는
+npm install
 
 # 개발 서버 실행
 pnpm dev
+# 또는
+npm run dev
 ```
 
 ### 스크립트
@@ -44,7 +49,7 @@ pnpm dev
 ```
 src/
 ├── api/              # API 클라이언트 모듈
-│   ├── http.ts       # Axios 인스턴스 및 인터셉터
+│   ├── http.ts       # Axios 인스턴스 및 401 인터셉터
 │   ├── auth.ts       # 인증 API
 │   ├── announcements.ts
 │   ├── releases.ts
@@ -52,15 +57,54 @@ src/
 │   ├── apikeys.ts
 │   ├── subscription.ts
 │   └── generated.ts  # OpenAPI 자동 생성 타입
-├── assets/           # 정적 자산
+├── assets/           # 정적 자산 + credits.md
 ├── components/       # 공통 컴포넌트
+│   ├── AppHeader.vue
+│   ├── AppFooter.vue
+│   ├── ThemeToggle.vue
+│   ├── Toast.vue
+│   ├── MarkdownRenderer.vue
+│   └── ...
+├── composables/      # Vue Composables
+│   ├── useToast.ts
+│   └── useSeoMeta.ts
 ├── content/docs/     # 문서 Markdown 파일
 ├── layouts/          # 레이아웃 컴포넌트
+│   ├── DefaultLayout.vue
+│   ├── ConsoleLayout.vue
+│   ├── AdminLayout.vue
+│   ├── AuthLayout.vue
+│   └── DocsLayout.vue
 ├── pages/            # 페이지 컴포넌트
 ├── router/           # Vue Router 설정
-├── stores/           # Pinia 스토어
-└── styles/           # 전역 스타일
+├── stores/           # Pinia 스토어 (auth, theme)
+├── styles/           # Tailwind 기반 전역 스타일
+└── utils/            # 유틸리티 함수
 ```
+
+## 주요 기능
+
+### 인증 시스템
+- Access Token: 메모리 저장 (Pinia)
+- Refresh Token: HttpOnly Cookie
+- 401 발생 시 자동 토큰 갱신 및 요청 재시도
+- 동시 요청 시 refresh 락/큐로 중복 방지
+
+### 다크모드
+- Light / Dark / System 모드 지원
+- localStorage 저장으로 새로고침 후에도 유지
+- FOUC 방지 스크립트 적용
+
+### SEO
+- 페이지별 title/description 메타 태그
+- Open Graph / Twitter Card 지원
+- robots.txt, sitemap.xml 제공
+
+### 접근성
+- Skip to content 링크
+- 키보드 네비게이션 지원
+- ARIA 속성 적용
+- prefers-reduced-motion 존중
 
 ## 개발 환경
 
@@ -100,3 +144,7 @@ cp .env.example .env
 ### Admin (관리자 권한 필요)
 - `/admin/announcements` - 공지사항 관리
 - `/admin/releases` - 릴리즈 관리
+
+## 라이선스
+
+자세한 라이선스 정보는 [src/assets/credits.md](src/assets/credits.md)를 참조하세요.

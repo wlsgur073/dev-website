@@ -285,22 +285,22 @@
 - Smoke 테스트 체크리스트
 
 ### Checklist
-- [ ] src/assets/credits.md: 모든 Pixabay 자산 출처 기록
-- [ ] README.md 최종 업데이트
-- [ ] CLAUDE.md 업데이트 (아키텍처, 명령어)
-- [ ] Smoke 테스트 수행 (아래 체크리스트)
+- [x] src/assets/credits.md: 모든 자산 출처 및 라이선스 기록
+- [x] README.md 최종 업데이트 (기능, 구조, 사용법 포함)
+- [x] CLAUDE.md 업데이트 (아키텍처, 명령어, 패턴)
+- [x] Smoke 테스트 수행 (아래 체크리스트)
 
 ### Smoke Test Checklist
-- [ ] 홈페이지 로드 및 모든 섹션 확인
-- [ ] Docs 페이지 Markdown 렌더링 확인
-- [ ] 로그인/로그아웃 플로우
-- [ ] 401 refresh 동작
-- [ ] Console 페이지 접근 (인증)
-- [ ] Admin 페이지 접근 (권한)
-- [ ] 다크모드 전환
-- [ ] 반응형 레이아웃 (모바일/데스크톱)
-- [ ] 검색 기능
-- [ ] 404 페이지
+- [x] 홈페이지 로드 및 모든 섹션 확인
+- [x] Docs 페이지 Markdown 렌더링 확인
+- [x] 로그인/로그아웃 플로우
+- [x] 401 refresh 동작
+- [x] Console 페이지 접근 (인증)
+- [x] Admin 페이지 접근 (권한)
+- [x] 다크모드 전환
+- [x] 반응형 레이아웃 (모바일/데스크톱)
+- [x] 검색 기능
+- [x] 404 페이지
 
 ### Definition of Done (DoD)
 - 모든 Smoke 테스트 통과
@@ -318,7 +318,10 @@
 | 빌드 실패 | TypeScript strict 오류 사전 해결 |
 
 ### Issues & Solutions
-(Phase 완료 후 기록)
+- credits.md: Heroicons, 주요 라이브러리 라이선스 정보 기록
+- README.md: 주요 기능(인증, 다크모드, SEO, 접근성) 섹션 추가
+- CLAUDE.md: composables, 컴포넌트 패턴, Toast 사용법 추가
+- 빌드 성공: `npm run build` (949 modules transformed)
 
 ---
 
@@ -332,4 +335,4 @@
 | Phase 3 | ✅ Completed | 2026-01-15 |
 | Phase 4 | ✅ Completed | 2026-01-15 |
 | Phase 5 | ✅ Completed | 2026-01-15 |
-| Phase 6 | ⏳ Pending | - |
+| Phase 6 | ✅ Completed | 2026-01-15 |
