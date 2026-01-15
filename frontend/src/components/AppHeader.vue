@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import {
   Bars3Icon,
   XMarkIcon,
   MagnifyingGlassIcon,
+  ArrowLeftStartOnRectangleIcon,
+  UserCircleIcon,
 } from '@heroicons/vue/24/outline'
 import ThemeToggle from './ThemeToggle.vue'
 import { useAuthStore } from '@/stores'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const isMobileMenuOpen = ref(false)
+const isUserMenuOpen = ref(false)
 
 const navLinks = [
   { name: 'Docs', to: '/docs' },
@@ -23,6 +27,17 @@ const navLinks = [
 
 function toggleMobileMenu() {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+function toggleUserMenu() {
+  isUserMenuOpen.value = !isUserMenuOpen.value
+}
+
+async function handleLogout() {
+  await authStore.logout()
+  isUserMenuOpen.value = false
+  isMobileMenuOpen.value = false
+  router.push('/')
 }
 </script>
 
@@ -60,12 +75,48 @@ function toggleMobileMenu() {
           <ThemeToggle />
 
           <template v-if="authStore.isAuthenticated">
-            <RouterLink
-              to="/console"
-              class="hidden sm:inline-flex btn btn-secondary text-sm"
-            >
-              Console
-            </RouterLink>
+            <!-- User menu -->
+            <div class="relative hidden sm:block">
+              <button
+                type="button"
+                class="flex items-center gap-2 p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                @click="toggleUserMenu"
+                :aria-expanded="isUserMenuOpen"
+              >
+                <UserCircleIcon class="w-6 h-6" />
+                <span class="text-sm font-medium">{{ authStore.user?.name || 'User' }}</span>
+              </button>
+
+              <div
+                v-if="isUserMenuOpen"
+                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+              >
+                <RouterLink
+                  to="/console"
+                  class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="isUserMenuOpen = false"
+                >
+                  Console
+                </RouterLink>
+                <RouterLink
+                  v-if="authStore.isAdmin"
+                  to="/admin/announcements"
+                  class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="isUserMenuOpen = false"
+                >
+                  Admin
+                </RouterLink>
+                <hr class="my-1 border-gray-200 dark:border-gray-700" />
+                <button
+                  type="button"
+                  class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="handleLogout"
+                >
+                  <ArrowLeftStartOnRectangleIcon class="w-4 h-4" />
+                  Sign out
+                </button>
+              </div>
+            </div>
           </template>
           <template v-else>
             <RouterLink
@@ -114,6 +165,9 @@ function toggleMobileMenu() {
         </RouterLink>
         <hr class="border-gray-200 dark:border-gray-700" />
         <template v-if="authStore.isAuthenticated">
+          <div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+            Signed in as {{ authStore.user?.email }}
+          </div>
           <RouterLink
             to="/console"
             class="block px-3 py-2 rounded-lg text-base font-medium text-blue-600 dark:text-blue-400"
@@ -121,6 +175,21 @@ function toggleMobileMenu() {
           >
             Console
           </RouterLink>
+          <RouterLink
+            v-if="authStore.isAdmin"
+            to="/admin/announcements"
+            class="block px-3 py-2 rounded-lg text-base font-medium text-blue-600 dark:text-blue-400"
+            @click="isMobileMenuOpen = false"
+          >
+            Admin
+          </RouterLink>
+          <button
+            type="button"
+            class="w-full text-left px-3 py-2 rounded-lg text-base font-medium text-red-600 dark:text-red-400"
+            @click="handleLogout"
+          >
+            Sign out
+          </button>
         </template>
         <template v-else>
           <RouterLink

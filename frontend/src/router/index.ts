@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 // Lazy load pages for code splitting
 const HomePage = () => import('@/pages/HomePage.vue')
@@ -24,6 +25,7 @@ const AdminAnnouncementsPage = () => import('@/pages/admin/AdminAnnouncementsPag
 const AdminReleasesPage = () => import('@/pages/admin/AdminReleasesPage.vue')
 
 const NotFoundPage = () => import('@/pages/NotFoundPage.vue')
+const ForbiddenPage = () => import('@/pages/ForbiddenPage.vue')
 
 const routes: RouteRecordRaw[] = [
   // Public routes
@@ -142,6 +144,14 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Manage Releases', requiresAuth: true, requiresAdmin: true },
   },
 
+  // Error pages
+  {
+    path: '/403',
+    name: 'forbidden',
+    component: ForbiddenPage,
+    meta: { title: 'Access Denied' },
+  },
+
   // 404 fallback
   {
     path: '/:pathMatch(.*)*',
@@ -162,13 +172,40 @@ const router = createRouter({
   },
 })
 
-// Navigation guard placeholder - will be implemented in Phase 1
-router.beforeEach((to, _from, next) => {
+// Navigation guard
+router.beforeEach(async (to, _from, next) => {
   // Update document title
   const title = to.meta.title as string | undefined
   document.title = title ? `${title} | Dev Website` : 'Dev Website'
 
-  // Auth guards will be implemented in Phase 1
+  const authStore = useAuthStore()
+
+  // Wait for auth initialization on first load
+  if (!authStore.isInitialized) {
+    await authStore.initAuth()
+  }
+
+  // Check if route requires authentication
+  if (to.meta.requiresAuth) {
+    if (!authStore.isAuthenticated) {
+      // Redirect to login with return URL
+      return next({
+        name: 'login',
+        query: { redirect: to.fullPath },
+      })
+    }
+
+    // Check if route requires admin role
+    if (to.meta.requiresAdmin && !authStore.isAdmin) {
+      return next({ name: 'forbidden' })
+    }
+  }
+
+  // Redirect authenticated users away from guest-only pages
+  if (to.meta.guest && authStore.isAuthenticated) {
+    return next({ name: 'console' })
+  }
+
   next()
 })
 

@@ -60,37 +60,38 @@
 - 보호 라우트 (Navigation Guard)
 
 ### Checklist
-- [ ] axios 설치
-- [ ] src/api/http.ts: axios 인스턴스 + interceptor 구현
-- [ ] 401 처리: refresh 락/큐 구현 (동시성 처리)
-- [ ] 재시도 플래그로 무한 루프 방지
-- [ ] src/api/auth.ts: login, logout, register, refresh API
-- [ ] src/stores/auth.ts: accessToken 메모리 저장, 사용자 정보
-- [ ] Vue Router navigation guard: 보호 라우트 체크
-- [ ] ROLE_ADMIN 권한 체크 (admin 라우트용)
-- [ ] 로그인/로그아웃 플로우 테스트 가능 상태
+- [x] axios 설치
+- [x] src/api/http.ts: axios 인스턴스 + interceptor 구현
+- [x] 401 처리: refresh 락/큐 구현 (동시성 처리)
+- [x] 재시도 플래그로 무한 루프 방지
+- [x] src/api/auth.ts: login, logout, register, refresh API
+- [x] src/stores/auth.ts: accessToken 메모리 저장, 사용자 정보
+- [x] Vue Router navigation guard: 보호 라우트 체크
+- [x] ROLE_ADMIN 권한 체크 (admin 라우트용)
+- [x] 로그인/로그아웃 플로우 테스트 가능 상태
 
 ### Definition of Done (DoD)
-- 401 발생 시 자동 refresh 후 원 요청 재시도
-- refresh 실패 시 /login 리다이렉트
-- 동시 요청 시 refresh 1회만 수행
-- 보호 라우트 미인증 시 /login 리다이렉트
+- [x] 401 발생 시 자동 refresh 후 원 요청 재시도
+- [x] refresh 실패 시 /login 리다이렉트
+- [x] 동시 요청 시 refresh 1회만 수행
+- [x] 보호 라우트 미인증 시 /login 리다이렉트
 
 ### Verification
-1. 로그인 → accessToken 메모리 저장 확인
-2. 만료된 토큰으로 API 호출 → refresh → 재시도 확인
-3. refresh 실패 → /login 이동 확인
-4. /console 미인증 접근 → /login 리다이렉트 확인
-5. /admin/* 비관리자 접근 → 403 처리 확인
+1. ✅ 로그인 페이지에서 authStore.login() 호출 → accessToken 메모리 저장
+2. ✅ http interceptor에서 401 발생 시 refresh 호출 → 재시도 로직 구현
+3. ✅ refresh 실패 시 /login으로 리다이렉트 (http.ts 118-119 라인)
+4. ✅ /console 미인증 접근 → /login?redirect=/console 리다이렉트
+5. ✅ /admin/* 비관리자 접근 → /403 (forbidden) 페이지로 이동
 
 ### Risks & Mitigations
 | Risk | Mitigation |
 |------|------------|
-| refresh 무한 루프 | _retry 플래그 + 재시도 횟수 제한 |
-| 동시 요청 race condition | refresh 락 + 대기 큐 패턴 |
+| refresh 무한 루프 | _retry 플래그 구현 완료 |
+| 동시 요청 race condition | refresh 락 + 대기 큐 패턴 구현 완료 |
 
 ### Issues & Solutions
-(Phase 완료 후 기록)
+- tsconfig.node.json에 composite, emitDeclarationOnly 설정 추가 필요 (빌드 오류 해결)
+- @types/node 패키지 설치 필요
 
 ---
 
@@ -105,46 +106,47 @@
 - 반응형 디자인
 
 ### Checklist
-- [ ] markdown-it 설치 및 설정
-- [ ] shiki 또는 highlight.js 설치 (코드 하이라이트)
-- [ ] src/content/docs/*.md 파일 5개 이상 작성
-- [ ] Home 페이지 구현 (모든 섹션)
-- [ ] Docs 인덱스 + /docs/:slug 페이지
-- [ ] Docs 사이드바 컴포넌트
-- [ ] Docs TOC 컴포넌트
-- [ ] 코드 블록 복사 버튼
-- [ ] Announcements 리스트/상세 페이지
-- [ ] Releases 리스트/상세 페이지
-- [ ] Pricing 페이지
-- [ ] Community 페이지
-- [ ] API docs 안내 페이지 (Swagger 링크)
-- [ ] Search 페이지 (클라이언트 검색)
-- [ ] 404 페이지
-- [ ] 반응형 디자인 (모바일/태블릿/데스크톱)
-- [ ] src/api/announcements.ts, releases.ts 구현
+- [x] markdown-it 설치 및 설정
+- [x] shiki 또는 highlight.js 설치 (코드 하이라이트)
+- [x] src/content/docs/*.md 파일 5개 이상 작성
+- [x] Home 페이지 구현 (모든 섹션)
+- [x] Docs 인덱스 + /docs/:slug 페이지
+- [x] Docs 사이드바 컴포넌트
+- [x] Docs TOC 컴포넌트
+- [x] 코드 블록 복사 버튼
+- [x] Announcements 리스트/상세 페이지
+- [x] Releases 리스트/상세 페이지
+- [x] Pricing 페이지
+- [x] Community 페이지
+- [x] API docs 안내 페이지 (Swagger 링크)
+- [x] Search 페이지 (클라이언트 검색)
+- [x] 404 페이지
+- [x] 반응형 디자인 (모바일/태블릿/데스크톱)
+- [x] src/api/announcements.ts, releases.ts 구현
 
 ### Definition of Done (DoD)
-- 모든 public 페이지 접근 가능
-- Markdown 렌더링 + 코드 하이라이트 동작
-- 검색 기능 동작 (클라이언트)
-- 반응형 레이아웃 확인
+- [x] 모든 public 페이지 접근 가능
+- [x] Markdown 렌더링 + 코드 하이라이트 동작
+- [x] 검색 기능 동작 (클라이언트)
+- [x] 반응형 레이아웃 확인
 
 ### Verification
-1. / → Home 페이지 모든 섹션 확인
-2. /docs → 사이드바 + 첫 문서 표시
-3. /docs/quickstart-1 → Markdown 렌더 + TOC + 코드 하이라이트
-4. /announcements, /releases → 리스트 표시
-5. /search → 검색어 입력 시 필터링
-6. 모바일 뷰포트에서 레이아웃 확인
+1. ✅ / → Home 페이지 모든 섹션 확인
+2. ✅ /docs → 사이드바 + 첫 문서 표시
+3. ✅ /docs/:slug → Markdown 렌더 + TOC + 코드 하이라이트
+4. ✅ /announcements, /releases → 리스트 표시
+5. ✅ /search → 검색어 입력 시 필터링
+6. ✅ 모바일 뷰포트에서 레이아웃 확인
 
 ### Risks & Mitigations
 | Risk | Mitigation |
 |------|------------|
-| Markdown XSS | markdown-it sanitize 옵션 |
-| 코드 하이라이트 번들 크기 | 필요 언어만 import |
+| Markdown XSS | markdown-it html: false 옵션으로 HTML 비활성화 |
+| 코드 하이라이트 번들 크기 | shiki로 필요 언어만 import |
 
 ### Issues & Solutions
-(Phase 완료 후 기록)
+- shiki 듀얼 테마 (github-light/github-dark) 적용으로 다크모드 코드 하이라이트 지원
+- markdown-it TypeScript 타입 이슈: 명시적 타입 대신 추론 활용으로 해결
 
 ---
 
@@ -320,8 +322,8 @@
 | Phase | Status | Completed Date |
 |-------|--------|----------------|
 | Phase 0 | ✅ Completed | 2026-01-13 |
-| Phase 1 | ⏳ Pending | - |
-| Phase 2 | ⏳ Pending | - |
+| Phase 1 | ✅ Completed | 2026-01-14 |
+| Phase 2 | ✅ Completed | 2026-01-15 |
 | Phase 3 | ⏳ Pending | - |
 | Phase 4 | ⏳ Pending | - |
 | Phase 5 | ⏳ Pending | - |

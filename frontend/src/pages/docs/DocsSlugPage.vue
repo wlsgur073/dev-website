@@ -1,25 +1,130 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import { ref, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import DocsLayout from '@/layouts/DocsLayout.vue'
+import DocsSidebar from '@/components/DocsSidebar.vue'
+import DocsToc from '@/components/DocsToc.vue'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
+import { loadDocContent, getDocMeta, allDocs } from '@/content/docs'
+import type { TocItem } from '@/utils/markdown'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from '@heroicons/vue/24/outline'
 
 const route = useRoute()
-const slug = route.params.slug as string
+const router = useRouter()
+
+const slug = computed(() => route.params.slug as string)
+const content = ref<string | null>(null)
+const isLoading = ref(true)
+const toc = ref<TocItem[]>([])
+const docMeta = computed(() => getDocMeta(slug.value))
+
+// Navigation
+const currentIndex = computed(() => allDocs.findIndex(d => d.slug === slug.value))
+const prevDoc = computed(() => currentIndex.value > 0 ? allDocs[currentIndex.value - 1] : null)
+const nextDoc = computed(() => currentIndex.value < allDocs.length - 1 ? allDocs[currentIndex.value + 1] : null)
+
+async function loadContent() {
+  isLoading.value = true
+  content.value = null
+  toc.value = []
+
+  const result = await loadDocContent(slug.value)
+
+  if (result === null) {
+    // Document not found, redirect to 404
+    router.replace({ name: 'not-found' })
+    return
+  }
+
+  content.value = result
+  isLoading.value = false
+}
+
+function handleToc(items: TocItem[]) {
+  toc.value = items
+}
+
+watch(slug, loadContent, { immediate: true })
 </script>
 
 <template>
-  <DefaultLayout>
-    <div class="container-custom py-16">
-      <div class="max-w-3xl">
-        <p class="text-sm text-blue-600 dark:text-blue-400 mb-2">Documentation</p>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4 capitalize">
-          {{ slug?.replace(/-/g, ' ') || 'Document' }}
-        </h1>
-        <div class="prose dark:prose-invert max-w-none">
-          <p class="text-gray-600 dark:text-gray-400">
-            Documentation content for "{{ slug }}" will be rendered here using markdown-it in Phase 2.
-          </p>
-        </div>
+  <DocsLayout>
+    <template #sidebar>
+      <DocsSidebar />
+    </template>
+
+    <template #toc>
+      <DocsToc :items="toc" />
+    </template>
+
+    <article class="max-w-3xl">
+      <!-- Breadcrumb -->
+      <nav class="mb-6">
+        <ol class="flex items-center gap-2 text-sm">
+          <li>
+            <RouterLink to="/docs" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+              Docs
+            </RouterLink>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li class="text-gray-900 dark:text-white font-medium">
+            {{ docMeta?.title || slug }}
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Content -->
+      <div v-if="isLoading" class="animate-pulse space-y-4">
+        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5"></div>
+        <div class="h-32 bg-gray-200 dark:bg-gray-700 rounded mt-8"></div>
       </div>
-    </div>
-  </DefaultLayout>
+
+      <MarkdownRenderer
+        v-else-if="content"
+        :content="content"
+        @toc="handleToc"
+      />
+
+      <!-- Prev/Next navigation -->
+      <nav
+        v-if="!isLoading && content"
+        class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex justify-between gap-4"
+      >
+        <RouterLink
+          v-if="prevDoc"
+          :to="`/docs/${prevDoc.slug}`"
+          class="flex-1 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-colors group"
+        >
+          <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+            <ArrowLeftIcon class="w-4 h-4" />
+            Previous
+          </div>
+          <div class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+            {{ prevDoc.title }}
+          </div>
+        </RouterLink>
+        <div v-else class="flex-1" />
+
+        <RouterLink
+          v-if="nextDoc"
+          :to="`/docs/${nextDoc.slug}`"
+          class="flex-1 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-colors group text-right"
+        >
+          <div class="flex items-center justify-end gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+            Next
+            <ArrowRightIcon class="w-4 h-4" />
+          </div>
+          <div class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+            {{ nextDoc.title }}
+          </div>
+        </RouterLink>
+      </nav>
+    </article>
+  </DocsLayout>
 </template>
