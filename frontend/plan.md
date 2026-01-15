@@ -158,19 +158,19 @@
 - /console/billing: 구독/결제 정보
 
 ### Checklist
-- [ ] Console 레이아웃 완성
-- [ ] /console 대시보드 페이지
-- [ ] /console/api-keys: 키 리스트, 생성, 삭제
-- [ ] /console/billing: 구독 정보, 플랜 표시
-- [ ] src/api/apikeys.ts 구현
-- [ ] src/api/subscription.ts 구현
-- [ ] src/api/plans.ts 구현
-- [ ] 로딩/에러 상태 처리
+- [x] Console 레이아웃 완성
+- [x] /console 대시보드 페이지
+- [x] /console/api-keys: 키 리스트, 생성, 삭제
+- [x] /console/billing: 구독 정보, 플랜 표시 (프로토타입)
+- [x] src/api/apikeys.ts 구현
+- [x] src/api/subscription.ts 구현
+- [x] src/api/plans.ts 구현
+- [x] 로딩/에러 상태 처리
 
 ### Definition of Done (DoD)
-- 인증된 사용자만 Console 접근 가능
-- API 키 CRUD 동작
-- Billing 정보 표시
+- [x] 인증된 사용자만 Console 접근 가능
+- [x] API 키 CRUD 동작
+- [x] Billing 정보 표시 (프로토타입)
 
 ### Verification
 1. 로그인 후 /console 접근 → 대시보드 표시
@@ -184,7 +184,8 @@
 | API 키 노출 | 생성 시 1회만 표시, 이후 마스킹 |
 
 ### Issues & Solutions
-(Phase 완료 후 기록)
+- Billing 기능은 사용자 요청에 따라 프로토타입으로만 구현 (Coming Soon 표시)
+- API 키 생성 시 secret은 1회만 표시, 이후 prefix만 표시
 
 ---
 
@@ -324,7 +325,7 @@
 | Phase 0 | ✅ Completed | 2026-01-13 |
 | Phase 1 | ✅ Completed | 2026-01-14 |
 | Phase 2 | ✅ Completed | 2026-01-15 |
-| Phase 3 | ⏳ Pending | - |
+| Phase 3 | ✅ Completed | 2026-01-15 |
 | Phase 4 | ⏳ Pending | - |
 | Phase 5 | ⏳ Pending | - |
 | Phase 6 | ⏳ Pending | - |
