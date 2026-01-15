@@ -197,17 +197,17 @@
 - ROLE_ADMIN 권한 체크
 
 ### Checklist
-- [ ] Admin 레이아웃 완성
-- [ ] /admin/announcements: 리스트, 생성, 수정, 삭제 폼
-- [ ] /admin/releases: 리스트, 생성, 수정, 삭제 폼
-- [ ] 권한 체크 (비관리자 → 403)
-- [ ] 폼 유효성 검사
-- [ ] 성공/실패 토스트 알림
+- [x] Admin 레이아웃 완성
+- [x] /admin/announcements: 리스트, 생성, 수정, 삭제 폼
+- [x] /admin/releases: 리스트, 생성, 수정, 삭제 폼
+- [x] 권한 체크 (비관리자 → 403)
+- [x] 폼 유효성 검사
+- [x] 성공/실패 토스트 알림
 
 ### Definition of Done (DoD)
-- ROLE_ADMIN 사용자만 Admin 접근 가능
-- Announcements/Releases CRUD 완전 동작
-- 비관리자 403 페이지 표시
+- [x] ROLE_ADMIN 사용자만 Admin 접근 가능
+- [x] Announcements/Releases CRUD 완전 동작
+- [x] 비관리자 403 페이지 표시
 
 ### Verification
 1. ROLE_ADMIN 계정으로 /admin/* 접근
@@ -221,7 +221,8 @@
 | 권한 우회 | 프론트 가드 + 백엔드 검증 (백엔드 책임) |
 
 ### Issues & Solutions
-(Phase 완료 후 기록)
+- Toast 컴포넌트 및 useToast composable 생성하여 성공/실패 알림 구현
+- 폼 유효성 검사: 필수 필드 체크, 버전 형식 검증 (x.x.x)
 
 ---
 
@@ -326,6 +327,6 @@
 | Phase 1 | ✅ Completed | 2026-01-14 |
 | Phase 2 | ✅ Completed | 2026-01-15 |
 | Phase 3 | ✅ Completed | 2026-01-15 |
-| Phase 4 | ⏳ Pending | - |
+| Phase 4 | ✅ Completed | 2026-01-15 |
 | Phase 5 | ⏳ Pending | - |
 | Phase 6 | ⏳ Pending | - |
