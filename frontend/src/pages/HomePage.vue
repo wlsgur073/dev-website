@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import { getLatestAnnouncements, type Announcement } from '@/api/announcements'
 import { getLatestReleases, type Release } from '@/api/releases'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import {
   RocketLaunchIcon,
   KeyIcon,
@@ -12,6 +13,13 @@ import {
   CommandLineIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline'
+
+useSeoMeta({
+  title: 'Home',
+  description: 'Build amazing products with powerful APIs, comprehensive documentation, and developer-first tools.',
+  keywords: 'developer, API, documentation, platform, cloud, SDK',
+  ogType: 'website',
+})
 
 const announcements = ref<Announcement[]>([])
 const releases = ref<Release[]>([])

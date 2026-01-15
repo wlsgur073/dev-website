@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DocsLayout from '@/layouts/DocsLayout.vue'
 import DocsSidebar from '@/components/DocsSidebar.vue'
@@ -7,6 +7,7 @@ import DocsToc from '@/components/DocsToc.vue'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 import { loadDocContent, getDocMeta, allDocs } from '@/content/docs'
 import type { TocItem } from '@/utils/markdown'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -20,6 +21,19 @@ const content = ref<string | null>(null)
 const isLoading = ref(true)
 const toc = ref<TocItem[]>([])
 const docMeta = computed(() => getDocMeta(slug.value))
+
+// Dynamic SEO meta
+watchEffect(() => {
+  if (docMeta.value) {
+    document.title = `${docMeta.value.title} | Documentation | Dev Website`
+  }
+})
+
+useSeoMeta({
+  description: 'Developer documentation and guides for Dev Website platform.',
+  keywords: 'documentation, API, guide, tutorial, developer',
+  ogType: 'article',
+})
 
 // Navigation
 const currentIndex = computed(() => allDocs.findIndex(d => d.slug === slug.value))

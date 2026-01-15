@@ -1,0 +1,10 @@
+# robots.txt for Dev Website
+User-agent: *
+Allow: /
+
+# Disallow admin and console areas
+Disallow: /admin/
+Disallow: /console/
+
+# Sitemap location
+Sitemap: https://dev-website.com/sitemap.xml

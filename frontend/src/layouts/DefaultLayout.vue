@@ -5,8 +5,11 @@ import AppFooter from '@/components/AppFooter.vue'
 
 <template>
   <div class="min-h-screen flex flex-col">
+    <a href="#main-content" class="skip-link">
+      Skip to main content
+    </a>
     <AppHeader />
-    <main class="flex-1">
+    <main id="main-content" class="flex-1" tabindex="-1">
       <slot />
     </main>
     <AppFooter />

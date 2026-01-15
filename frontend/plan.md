@@ -235,19 +235,19 @@
 - 성능 최적화 (코드 스플릿)
 
 ### Checklist
-- [ ] 다크모드 토글 컴포넌트
-- [ ] localStorage 저장 (light/dark/system)
-- [ ] System 모드: OS 설정 따름 (prefers-color-scheme)
-- [ ] Tailwind dark: 클래스 적용
-- [ ] 페이지별 title/description (vue-router meta 또는 @vueuse/head)
-- [ ] OG/Twitter 메타 태그
-- [ ] public/robots.txt 생성
-- [ ] public/sitemap.xml 생성 (정적)
-- [ ] prefers-reduced-motion 존중
-- [ ] 키보드 내비게이션 확인
-- [ ] ARIA 속성 추가 (필요한 곳)
-- [ ] 포커스 스타일 (outline)
-- [ ] 라우트 단위 코드 스플릿 확인 (defineAsyncComponent / lazy import)
+- [x] 다크모드 토글 컴포넌트
+- [x] localStorage 저장 (light/dark/system)
+- [x] System 모드: OS 설정 따름 (prefers-color-scheme)
+- [x] Tailwind dark: 클래스 적용
+- [x] 페이지별 title/description (vue-router meta 또는 @vueuse/head)
+- [x] OG/Twitter 메타 태그
+- [x] public/robots.txt 생성
+- [x] public/sitemap.xml 생성 (정적)
+- [x] prefers-reduced-motion 존중
+- [x] 키보드 내비게이션 확인
+- [x] ARIA 속성 추가 (필요한 곳)
+- [x] 포커스 스타일 (outline)
+- [x] 라우트 단위 코드 스플릿 확인 (defineAsyncComponent / lazy import)
 
 ### Definition of Done (DoD)
 - 다크모드 전환 동작, 새로고침 후 유지
@@ -270,7 +270,10 @@
 | 접근성 누락 | axe DevTools로 검사 |
 
 ### Issues & Solutions
-(Phase 완료 후 기록)
+- 다크모드 토글/테마스토어/FOUC 방지 스크립트는 이전 Phase에서 이미 구현됨
+- useSeoMeta composable 생성하여 페이지별 동적 메타 태그 설정 지원
+- Skip Link 추가: 모든 레이아웃(Default, Console, Admin, Docs, Auth)에 적용
+- prefers-reduced-motion: main.css에서 애니메이션/트랜지션 비활성화
 
 ---
 
@@ -328,5 +331,5 @@
 | Phase 2 | ✅ Completed | 2026-01-15 |
 | Phase 3 | ✅ Completed | 2026-01-15 |
 | Phase 4 | ✅ Completed | 2026-01-15 |
-| Phase 5 | ⏳ Pending | - |
+| Phase 5 | ✅ Completed | 2026-01-15 |
 | Phase 6 | ⏳ Pending | - |

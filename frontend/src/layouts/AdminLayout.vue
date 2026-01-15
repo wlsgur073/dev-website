@@ -19,6 +19,9 @@ function isActive(path: string): boolean {
 
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <a href="#main-content" class="skip-link">
+      Skip to main content
+    </a>
     <!-- Top navbar -->
     <header class="bg-red-600 dark:bg-red-800">
       <div class="container-custom">
@@ -63,7 +66,7 @@ function isActive(path: string): boolean {
       </aside>
 
       <!-- Main content -->
-      <main class="flex-1 p-6">
+      <main id="main-content" class="flex-1 p-6" tabindex="-1">
         <slot />
       </main>
     </div>

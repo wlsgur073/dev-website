@@ -17,6 +17,14 @@
     @apply outline-2 outline-offset-2 outline-blue-500;
   }
 
+  /* Skip to main content link */
+  .skip-link {
+    @apply sr-only focus:not-sr-only;
+    @apply focus:fixed focus:top-4 focus:left-4 focus:z-[100];
+    @apply focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+  }
+
   /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -25,6 +33,11 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    html {
+      scroll-behavior: auto;
     }
   }
 }
