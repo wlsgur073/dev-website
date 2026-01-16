@@ -51,8 +51,8 @@ docker compose up -d
 
 | Role | Email | Password |
 |------|-------|----------|
-| ADMIN | admin@devwebsite.com | admin123! |
-| USER | user@devwebsite.com | user123! |
+| ADMIN | admin@example.com | admin123 |
+| USER | user@example.com | user123 |
 
 ## API 엔드포인트
 

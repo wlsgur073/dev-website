@@ -90,7 +90,7 @@ curl http://localhost:8080/v3/api-docs  # OpenAPI JSON 반환
 ---
 
 ## Phase 2: Auth (JWT + Refresh Rotation + CSRF)
-**상태: [ ] 대기**
+**상태: [x] 완료**
 
 ### Goals
 - Spring Security + JWT 설정
@@ -99,21 +99,21 @@ curl http://localhost:8080/v3/api-docs  # OpenAPI JSON 반환
 - 개발용 seed 계정 (V2__seed_dev.sql)
 
 ### Checklist
-- [ ] SecurityConfig 구현
-- [ ] JwtTokenProvider 구현
-- [ ] POST /api/v1/auth/register
-- [ ] POST /api/v1/auth/login (refresh cookie set)
-- [ ] POST /api/v1/auth/refresh (rotation)
-- [ ] POST /api/v1/auth/logout
-- [ ] GET /api/v1/me
-- [ ] PATCH /api/v1/me
-- [ ] CSRF 방어 구현 (CsrfFilter)
-- [ ] V2__seed_dev.sql 작성 (admin, user 계정)
+- [x] SecurityConfig 구현
+- [x] JwtTokenProvider 구현
+- [x] POST /api/v1/auth/register
+- [x] POST /api/v1/auth/login (refresh cookie set)
+- [x] POST /api/v1/auth/refresh (rotation)
+- [x] POST /api/v1/auth/logout
+- [x] GET /api/v1/me
+- [x] PATCH /api/v1/me
+- [x] CSRF 방어 구현 (CsrfProtectionFilter)
+- [x] V2__seed_dev.sql 작성 (admin, user 계정)
 
 ### DoD
-- 회원가입 -> 로그인 -> refresh -> logout 플로우 동작
-- Refresh token rotation 시 이전 토큰 revoke 확인
-- CSRF 방어 동작 확인
+- [x] 회원가입 -> 로그인 -> refresh -> logout 플로우 동작
+- [x] Refresh token rotation 시 이전 토큰 revoke 확인
+- [x] CSRF 방어 동작 확인
 
 ### Verification
 ```bash
@@ -131,6 +131,9 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 ### Risks
 - Refresh token 해시 저장 구현 복잡도
 - Cookie 설정 (HttpOnly, Secure, SameSite)
+
+### Issues & Solutions
+- V2__seed_dev.sql의 bcrypt 해시가 예시 해시 -> DataInitializer로 dev 환경에서 올바른 비밀번호로 업데이트
 
 ---
 
@@ -288,3 +291,15 @@ curl http://localhost:8080/api/v1/plans
   - FlywayConfig.java: Flyway 수동 설정 (autoconfiguration 미작동 해결)
   - Docker 포트 5433으로 변경 (로컬 PostgreSQL 5432 충돌 해결)
   - /actuator/health, /swagger-ui, /v3/api-docs 검증 완료
+- **Phase 2 완료**
+  - JwtProperties.java, JwtTokenProvider.java: JWT 토큰 생성/검증
+  - JwtAuthenticationFilter.java: Bearer 토큰 인증 필터
+  - CsrfProtectionFilter.java: Origin/Referer 검사 CSRF 방어
+  - User.java, UserRepository.java: 사용자 엔티티 및 리포지토리
+  - RefreshToken.java, RefreshTokenRepository.java: 리프레시 토큰 엔티티 및 리포지토리
+  - AuthService.java, AuthController.java: 회원가입, 로그인, 토큰 갱신, 로그아웃
+  - UserService.java, UserController.java: /api/v1/me 엔드포인트
+  - V2__seed_dev.sql: 개발용 seed 계정 (admin, user)
+  - DataInitializer.java: dev 환경에서 seed 비밀번호 업데이트
+  - SecurityConfig.java 업데이트: JWT 필터, CSRF 필터, CORS 설정
+  - 전체 인증 플로우 검증 완료 (register -> login -> refresh -> logout)
