@@ -10,12 +10,8 @@
       "Bash(docker exec:*)",
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
-      "Bash(cmd.exe /c \"taskkill /PID 35812 /F\")",
       "Bash(powershell:*)",
-      "Bash(cmd.exe //c \"taskkill /PID 25476 /F\")",
       "Bash(./gradlew dependencies:*)",
-      "Bash(cmd.exe //c \"taskkill /PID 31964 /F\")",
-      "Bash(cmd.exe //c \"tasklist /FI \"\"PID eq 7060\"\"\")",
       "Bash(wmic process where \"ProcessId=7060\" get Name,ExecutablePath)",
       "Bash(timeout /t 3 /nobreak)",
       "Bash(./gradlew bootRun:*)"
