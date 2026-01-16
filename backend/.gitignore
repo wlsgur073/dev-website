@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/intellij+all,eclipse,visualstudiocode,windows,macos,linux,gradle,maven
-# Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,eclipse,visualstudiocode,windows,macos,linux,gradle,maven
+# Created by https://www.toptal.com/developers/gitignore/api/intellij+all,eclipse,visualstudiocode,windows,macos,linux,gradle,maven,obsidian
+# Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,eclipse,visualstudiocode,windows,macos,linux,gradle,maven,obsidian
 
 ### Eclipse ###
 .metadata
@@ -222,6 +222,10 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+### Obsidian ###
+# config dir
+.obsidian/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -292,4 +296,4 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-# End of https://www.toptal.com/developers/gitignore/api/intellij+all,eclipse,visualstudiocode,windows,macos,linux,gradle,maven
+# End of https://www.toptal.com/developers/gitignore/api/intellij+all,eclipse,visualstudiocode,windows,macos,linux,gradle,maven,obsidian
