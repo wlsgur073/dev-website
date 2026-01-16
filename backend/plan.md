@@ -180,7 +180,7 @@ curl http://localhost:8080/api/v1/releases
 ---
 
 ## Phase 4: API Keys (secretOnce, hash 저장)
-**상태: [ ] 대기**
+**상태: [x] 완료**
 
 ### Goals
 - API Key 관리 기능 구현
@@ -188,17 +188,17 @@ curl http://localhost:8080/api/v1/releases
 - DB에는 해시로만 저장
 
 ### Checklist
-- [ ] ApiKey 엔티티/리포지토리
-- [ ] GET /api/v1/api-keys (auth)
-- [ ] POST /api/v1/api-keys (auth) -> secretOnce 반환
-- [ ] DELETE /api/v1/api-keys/{id} (auth)
-- [ ] API Key 해시 저장 구현
-- [ ] prefix만 조회 가능하도록 구현
+- [x] ApiKey 엔티티/리포지토리
+- [x] GET /api/v1/api-keys (auth)
+- [x] POST /api/v1/api-keys (auth) -> secretOnce 반환
+- [x] DELETE /api/v1/api-keys/{id} (auth)
+- [x] API Key 해시 저장 구현 (SHA-256)
+- [x] prefix만 조회 가능하도록 구현
 
 ### DoD
-- API Key 생성 시 secretOnce 1회만 반환
-- 이후 조회 시 prefix만 표시
-- 삭제 기능 동작
+- [x] API Key 생성 시 secretOnce 1회만 반환
+- [x] 이후 조회 시 prefix만 표시
+- [x] 삭제 기능 동작
 
 ### Verification
 ```bash
@@ -210,6 +210,9 @@ curl -X POST http://localhost:8080/api/v1/api-keys \
 
 ### Risks
 - 해시 알고리즘 선택 (SHA-256 권장)
+
+### Issues & Solutions
+- key_prefix 컬럼 크기 부족 -> V3 마이그레이션으로 VARCHAR(20)으로 확장
 
 ---
 
@@ -317,3 +320,9 @@ curl http://localhost:8080/api/v1/plans
   - AdminReleaseController.java: Admin 릴리스 CRUD API
   - Pagination (page, size, sort) 지원
   - N+1 문제 해결을 위한 JOIN FETCH 적용
+- **Phase 4 완료**
+  - ApiKey.java, ApiKeyRepository.java: API Key 엔티티/리포지토리
+  - ApiKeyService.java: API Key 생성(secretOnce), 조회(prefix만), 삭제, 검증
+  - ApiKeyController.java: GET/POST/DELETE /api/v1/api-keys
+  - SHA-256 해시로 DB 저장, 평문은 생성 시 1회만 반환
+  - V3__alter_api_keys_prefix.sql: key_prefix 컬럼 크기 확장
