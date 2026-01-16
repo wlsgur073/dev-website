@@ -7,6 +7,7 @@ import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -56,6 +57,20 @@ public class GlobalExceptionHandler {
         problemDetail.setProperty("traceId", getTraceId());
 
         log.warn("Bad request: {}", ex.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ProblemDetail handleBadCredentialsException(BadCredentialsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNAUTHORIZED,
+                ex.getMessage()
+        );
+        problemDetail.setTitle("Unauthorized");
+        problemDetail.setType(URI.create("https://api.devwebsite.com/errors/unauthorized"));
+        problemDetail.setProperty("traceId", getTraceId());
+
+        log.warn("Bad credentials: {}", ex.getMessage());
         return problemDetail;
     }
 
