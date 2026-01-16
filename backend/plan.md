@@ -138,7 +138,7 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 ---
 
 ## Phase 3: Announcements / Releases CRUD
-**상태: [ ] 대기**
+**상태: [x] 완료**
 
 ### Goals
 - 공지사항 (Announcements) CRUD
@@ -146,24 +146,24 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 - Pagination 및 필터링
 
 ### Checklist
-- [ ] Announcement 엔티티/리포지토리
-- [ ] GET /api/v1/announcements (public, published only)
-- [ ] GET /api/v1/announcements/{id}
-- [ ] POST /api/v1/admin/announcements (admin)
-- [ ] PATCH /api/v1/admin/announcements/{id} (admin)
-- [ ] DELETE /api/v1/admin/announcements/{id} (admin)
-- [ ] Release 엔티티/리포지토리
-- [ ] GET /api/v1/releases (public)
-- [ ] GET /api/v1/releases/{id}
-- [ ] POST /api/v1/admin/releases (admin)
-- [ ] PATCH /api/v1/admin/releases/{id} (admin)
-- [ ] DELETE /api/v1/admin/releases/{id} (admin)
-- [ ] Pagination 구현 (page, size, sort)
+- [x] Announcement 엔티티/리포지토리
+- [x] GET /api/v1/announcements (public, published only)
+- [x] GET /api/v1/announcements/{id}
+- [x] POST /api/v1/admin/announcements (admin)
+- [x] PATCH /api/v1/admin/announcements/{id} (admin)
+- [x] DELETE /api/v1/admin/announcements/{id} (admin)
+- [x] Release 엔티티/리포지토리
+- [x] GET /api/v1/releases (public)
+- [x] GET /api/v1/releases/{id}
+- [x] POST /api/v1/admin/releases (admin)
+- [x] PATCH /api/v1/admin/releases/{id} (admin)
+- [x] DELETE /api/v1/admin/releases/{id} (admin)
+- [x] Pagination 구현 (page, size, sort)
 
 ### DoD
-- Public 엔드포인트 인증 없이 접근 가능
-- Admin 엔드포인트 ROLE_ADMIN 필요
-- Pagination 동작 확인
+- [x] Public 엔드포인트 인증 없이 접근 가능
+- [x] Admin 엔드포인트 ROLE_ADMIN 필요
+- [x] Pagination 동작 확인
 
 ### Verification
 ```bash
@@ -173,6 +173,9 @@ curl http://localhost:8080/api/v1/releases
 
 ### Risks
 - N+1 쿼리 문제 -> Fetch Join 또는 EntityGraph 사용
+
+### Issues & Solutions
+- N+1 문제 해결: Repository에서 JOIN FETCH 사용
 
 ---
 
@@ -303,3 +306,14 @@ curl http://localhost:8080/api/v1/plans
   - DataInitializer.java: dev 환경에서 seed 비밀번호 업데이트
   - SecurityConfig.java 업데이트: JWT 필터, CSRF 필터, CORS 설정
   - 전체 인증 플로우 검증 완료 (register -> login -> refresh -> logout)
+- **Phase 3 완료**
+  - Announcement.java, AnnouncementRepository.java: 공지사항 엔티티/리포지토리
+  - AnnouncementService.java: 공지사항 비즈니스 로직
+  - AnnouncementController.java: Public 공지사항 API
+  - AdminAnnouncementController.java: Admin 공지사항 CRUD API
+  - Release.java, ReleaseRepository.java: 릴리스 엔티티/리포지토리
+  - ReleaseService.java: 릴리스 비즈니스 로직
+  - ReleaseController.java: Public 릴리스 API
+  - AdminReleaseController.java: Admin 릴리스 CRUD API
+  - Pagination (page, size, sort) 지원
+  - N+1 문제 해결을 위한 JOIN FETCH 적용
