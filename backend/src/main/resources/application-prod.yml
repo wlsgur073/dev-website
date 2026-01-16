@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    show-sql: false
+
+  flyway:
+    locations: classpath:db/migration
+
+logging:
+  level:
+    com.devwebsite.backend: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+
+management:
+  endpoint:
+    health:
+      show-details: when_authorized
+
+server:
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
