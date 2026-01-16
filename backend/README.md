@@ -116,7 +116,7 @@ docker compose up -d
 | 변수명 | 설명 | 기본값 |
 |--------|------|--------|
 | DB_HOST | PostgreSQL 호스트 | localhost |
-| DB_PORT | PostgreSQL 포트 | 5432 |
+| DB_PORT | PostgreSQL 포트 | 5433 |
 | DB_NAME | 데이터베이스 이름 | devdb |
 | DB_USER | 데이터베이스 사용자 | devuser |
 | DB_PASSWORD | 데이터베이스 비밀번호 | devpass |

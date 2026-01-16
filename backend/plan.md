@@ -49,7 +49,7 @@
 ---
 
 ## Phase 1: Flyway + OpenAPI + Problem Details + Health
-**상태: [ ] 대기**
+**상태: [x] 완료**
 
 ### Goals
 - Flyway 마이그레이션 설정 및 초기 스키마 생성
@@ -58,28 +58,34 @@
 - Actuator Health 엔드포인트 활성화
 
 ### Checklist
-- [ ] V1__init.sql 작성 (전체 스키마)
-- [ ] springdoc-openapi 설정
-- [ ] GlobalExceptionHandler 구현 (RFC7807)
-- [ ] TraceIdFilter 구현
-- [ ] Actuator health 활성화
-- [ ] /v3/api-docs, /swagger-ui 접근 확인
+- [x] V1__init.sql 작성 (전체 스키마)
+- [x] springdoc-openapi 설정 (OpenApiConfig.java)
+- [x] GlobalExceptionHandler 구현 (RFC7807)
+- [x] TraceIdFilter 구현
+- [x] Actuator health 활성화
+- [x] /v3/api-docs, /swagger-ui 접근 확인
 
 ### DoD
-- Flyway 마이그레이션 성공
-- /actuator/health 200 OK
-- /swagger-ui/index.html 접근 가능
-- 에러 응답에 traceId 포함
+- [x] Flyway 마이그레이션 성공
+- [x] /actuator/health 200 OK
+- [x] /swagger-ui/index.html 접근 가능
+- [x] 에러 응답에 traceId 포함
 
 ### Verification
 ```bash
-curl http://localhost:8080/actuator/health
-curl http://localhost:8080/v3/api-docs
+docker compose up -d
+./gradlew bootRun
+curl http://localhost:8080/actuator/health  # {"status":"UP"}
+curl http://localhost:8080/v3/api-docs  # OpenAPI JSON 반환
 ```
 
 ### Risks
-- Flyway 버전 호환성
-- PostgreSQL 17 특정 문법 주의
+- Flyway 버전 호환성 -> 11.2.0 사용하여 해결
+- PostgreSQL 17.7 특정 문법 주의
+
+### Issues & Solutions
+- Flyway 자동 설정 미작동 -> FlywayConfig.java로 수동 설정
+- Docker PostgreSQL 포트 충돌 -> 5433 포트 사용으로 변경
 
 ---
 
@@ -273,3 +279,12 @@ curl http://localhost:8080/api/v1/plans
   - README.md, .env.example, .gitignore
   - scripts/export-openapi.sh
   - `./gradlew build -x test` 성공
+- **Phase 1 완료**
+  - V1__init.sql: users, refresh_tokens, api_keys, plans, subscriptions, announcements, releases 테이블
+  - OpenApiConfig.java: springdoc-openapi + JWT Bearer Auth 설정
+  - SecurityConfig.java: 기본 보안 설정 (public 엔드포인트 허용)
+  - TraceIdFilter.java: 요청별 traceId 생성 및 MDC 저장
+  - GlobalExceptionHandler.java: RFC7807 Problem Details 에러 응답
+  - FlywayConfig.java: Flyway 수동 설정 (autoconfiguration 미작동 해결)
+  - Docker 포트 5433으로 변경 (로컬 PostgreSQL 5432 충돌 해결)
+  - /actuator/health, /swagger-ui, /v3/api-docs 검증 완료
