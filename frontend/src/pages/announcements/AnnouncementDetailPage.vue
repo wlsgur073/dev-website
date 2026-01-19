@@ -17,8 +17,8 @@ const error = ref<string | null>(null)
 
 const id = computed(() => parseInt(route.params.id as string))
 
-function getCategoryColor(category: Announcement['category']): string {
-  const colors = {
+function getCategoryColor(category: string): string {
+  const colors: Record<string, string> = {
     general: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
     update: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
     maintenance: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300',
@@ -99,9 +99,6 @@ onMounted(loadAnnouncement)
           <div class="flex items-center gap-2 mb-4">
             <span :class="['text-sm font-medium px-3 py-1 rounded', getCategoryColor(announcement.category)]">
               {{ announcement.category }}
-            </span>
-            <span v-if="announcement.pinned" class="text-sm font-medium px-3 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-              Pinned
             </span>
           </div>
 

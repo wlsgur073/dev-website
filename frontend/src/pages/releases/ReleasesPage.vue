@@ -22,17 +22,17 @@ const pagination = ref({
   totalElements: 0,
 })
 
-const releaseTypes = ['all', 'major', 'minor', 'patch', 'hotfix'] as const
+const releaseTypes = ['all', 'MAJOR', 'MINOR', 'PATCH', 'HOTFIX'] as const
 const selectedType = ref<string>('all')
 
-function getReleaseTypeColor(type: Release['type']): string {
-  const colors = {
-    major: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
-    minor: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
-    patch: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
-    hotfix: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
+function getReleaseTypeColor(type: Release['releaseType']): string {
+  const colors: Record<string, string> = {
+    MAJOR: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
+    MINOR: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
+    PATCH: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
+    HOTFIX: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
   }
-  return colors[type] || colors.patch
+  return colors[type] || colors.PATCH
 }
 
 function formatDate(dateString: string): string {
@@ -160,8 +160,8 @@ onMounted(() => {
           <div class="flex items-start justify-between gap-4">
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2 mb-2">
-                <span :class="['text-xs font-medium px-2 py-0.5 rounded', getReleaseTypeColor(release.type)]">
-                  {{ release.type }}
+                <span :class="['text-xs font-medium px-2 py-0.5 rounded', getReleaseTypeColor(release.releaseType)]">
+                  {{ release.releaseType }}
                 </span>
                 <span class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
                   <TagIcon class="w-4 h-4" />
@@ -172,11 +172,11 @@ onMounted(() => {
                 {{ release.title }}
               </h2>
               <p class="text-gray-600 dark:text-gray-400 line-clamp-2">
-                {{ release.summary || release.content.substring(0, 150) }}
+                {{ release.content.substring(0, 150) }}
               </p>
             </div>
             <time class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
-              {{ formatDate(release.releaseDate) }}
+              {{ formatDate(release.releasedAt) }}
             </time>
           </div>
         </RouterLink>

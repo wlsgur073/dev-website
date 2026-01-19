@@ -1,12 +1,12 @@
-import { get, post, put, del } from './http'
+import { get, post, patch, del } from './http'
 
 export interface Announcement {
   id: number
   title: string
   content: string
-  summary?: string
-  category: 'general' | 'update' | 'maintenance' | 'security'
-  pinned: boolean
+  category: string
+  published: boolean
+  publishedAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -28,17 +28,15 @@ export interface AnnouncementsParams {
 export interface CreateAnnouncementRequest {
   title: string
   content: string
-  summary?: string
-  category: Announcement['category']
-  pinned?: boolean
+  category: string
+  published?: boolean
 }
 
 export interface UpdateAnnouncementRequest {
   title?: string
   content?: string
-  summary?: string
-  category?: Announcement['category']
-  pinned?: boolean
+  category?: string
+  published?: boolean
 }
 
 // Public APIs
@@ -63,7 +61,7 @@ export async function createAnnouncement(data: CreateAnnouncementRequest): Promi
 }
 
 export async function updateAnnouncement(id: number, data: UpdateAnnouncementRequest): Promise<Announcement> {
-  return put<Announcement>(`/admin/announcements/${id}`, data)
+  return patch<Announcement>(`/admin/announcements/${id}`, data)
 }
 
 export async function deleteAnnouncement(id: number): Promise<void> {

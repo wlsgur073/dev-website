@@ -1,13 +1,12 @@
-import { get, post, put, del } from './http'
+import { get, post, patch, del } from './http'
 
 export interface Release {
   id: number
   version: string
   title: string
   content: string
-  summary?: string
-  releaseDate: string
-  type: 'major' | 'minor' | 'patch' | 'hotfix'
+  releasedAt: string
+  releaseType: 'MAJOR' | 'MINOR' | 'PATCH' | 'HOTFIX'
   createdAt: string
   updatedAt: string
 }
@@ -30,23 +29,25 @@ export interface CreateReleaseRequest {
   version: string
   title: string
   content: string
-  summary?: string
-  releaseDate: string
-  type: Release['type']
+  releasedAt: string
+  releaseType: Release['releaseType']
 }
 
 export interface UpdateReleaseRequest {
   version?: string
   title?: string
   content?: string
-  summary?: string
-  releaseDate?: string
-  type?: Release['type']
+  releasedAt?: string
+  releaseType?: Release['releaseType']
 }
 
 // Public APIs
 export async function getReleases(params?: ReleasesParams): Promise<ReleasesResponse> {
-  return get<ReleasesResponse>('/releases', { params })
+  const apiParams = params ? {
+    ...params,
+    type: params.type?.toUpperCase(),
+  } : undefined
+  return get<ReleasesResponse>('/releases', { params: apiParams })
 }
 
 export async function getRelease(id: number): Promise<Release> {
@@ -60,13 +61,31 @@ export async function getLatestReleases(limit = 3): Promise<Release[]> {
   return response.content
 }
 
+// Helper to convert date string to LocalDateTime format
+function toLocalDateTime(dateStr: string): string {
+  // If already has time component, return as is
+  if (dateStr.includes('T')) {
+    return dateStr
+  }
+  // Add time component for LocalDateTime
+  return `${dateStr}T00:00:00`
+}
+
 // Admin APIs
 export async function createRelease(data: CreateReleaseRequest): Promise<Release> {
-  return post<Release>('/admin/releases', data)
+  const apiData = {
+    ...data,
+    releasedAt: toLocalDateTime(data.releasedAt),
+  }
+  return post<Release>('/admin/releases', apiData)
 }
 
 export async function updateRelease(id: number, data: UpdateReleaseRequest): Promise<Release> {
-  return put<Release>(`/admin/releases/${id}`, data)
+  const apiData = {
+    ...data,
+    releasedAt: data.releasedAt ? toLocalDateTime(data.releasedAt) : undefined,
+  }
+  return patch<Release>(`/admin/releases/${id}`, apiData)
 }
 
 export async function deleteRelease(id: number): Promise<void> {

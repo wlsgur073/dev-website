@@ -18,14 +18,14 @@ const error = ref<string | null>(null)
 
 const id = computed(() => parseInt(route.params.id as string))
 
-function getReleaseTypeColor(type: Release['type']): string {
-  const colors = {
-    major: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
-    minor: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
-    patch: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
-    hotfix: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
+function getReleaseTypeColor(type: Release['releaseType']): string {
+  const colors: Record<string, string> = {
+    MAJOR: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
+    MINOR: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
+    PATCH: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
+    HOTFIX: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
   }
-  return colors[type] || colors.patch
+  return colors[type] || colors.PATCH
 }
 
 function formatDate(dateString: string): string {
@@ -101,8 +101,8 @@ onMounted(loadRelease)
       <article v-else-if="release" class="max-w-3xl">
         <header class="mb-8">
           <div class="flex items-center gap-3 mb-4">
-            <span :class="['text-sm font-medium px-3 py-1 rounded', getReleaseTypeColor(release.type)]">
-              {{ release.type }}
+            <span :class="['text-sm font-medium px-3 py-1 rounded', getReleaseTypeColor(release.releaseType)]">
+              {{ release.releaseType }}
             </span>
             <span class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
               <TagIcon class="w-5 h-5" />
@@ -115,7 +115,7 @@ onMounted(loadRelease)
           </h1>
 
           <time class="text-gray-500 dark:text-gray-400">
-            Released on {{ formatDate(release.releaseDate) }}
+            Released on {{ formatDate(release.releasedAt) }}
           </time>
         </header>
 

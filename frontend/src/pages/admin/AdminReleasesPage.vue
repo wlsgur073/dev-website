@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useToast } from '@/composables/useToast'
+import { useThemeStore } from '@/stores/theme'
+import { MdEditor } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 import {
   getReleases,
   createRelease,
@@ -21,6 +24,15 @@ import {
 } from '@heroicons/vue/24/outline'
 
 const toast = useToast()
+const themeStore = useThemeStore()
+
+// Computed theme for markdown editor
+const editorTheme = computed(() => {
+  if (themeStore.mode === 'system') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+  return themeStore.mode
+})
 
 // List state
 const releases = ref<Release[]>([])
@@ -44,9 +56,8 @@ const form = ref<CreateReleaseRequest>({
   version: '',
   title: '',
   content: '',
-  summary: '',
-  releaseDate: new Date().toISOString().split('T')[0],
-  type: 'minor',
+  releasedAt: new Date().toISOString().split('T')[0],
+  releaseType: 'MINOR',
 })
 const formErrors = ref<Record<string, string>>({})
 
@@ -54,10 +65,10 @@ const formErrors = ref<Record<string, string>>({})
 const releaseToDelete = ref<Release | null>(null)
 
 const releaseTypes = [
-  { value: 'major', label: 'Major', color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' },
-  { value: 'minor', label: 'Minor', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' },
-  { value: 'patch', label: 'Patch', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' },
-  { value: 'hotfix', label: 'Hotfix', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' },
+  { value: 'MAJOR', label: 'Major', color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' },
+  { value: 'MINOR', label: 'Minor', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' },
+  { value: 'PATCH', label: 'Patch', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' },
+  { value: 'HOTFIX', label: 'Hotfix', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' },
 ]
 
 async function loadReleases() {
@@ -89,9 +100,8 @@ function openCreateModal() {
     version: '',
     title: '',
     content: '',
-    summary: '',
-    releaseDate: new Date().toISOString().split('T')[0],
-    type: 'minor',
+    releasedAt: new Date().toISOString().split('T')[0],
+    releaseType: 'MINOR',
   }
   formErrors.value = {}
   showFormModal.value = true
@@ -103,9 +113,8 @@ function openEditModal(release: Release) {
     version: release.version,
     title: release.title,
     content: release.content,
-    summary: release.summary || '',
-    releaseDate: release.releaseDate.split('T')[0],
-    type: release.type,
+    releasedAt: release.releasedAt.split('T')[0],
+    releaseType: release.releaseType,
   }
   formErrors.value = {}
   showFormModal.value = true
@@ -138,8 +147,8 @@ function validateForm(): boolean {
   if (!form.value.content.trim()) {
     formErrors.value.content = 'Content is required'
   }
-  if (!form.value.releaseDate) {
-    formErrors.value.releaseDate = 'Release date is required'
+  if (!form.value.releasedAt) {
+    formErrors.value.releasedAt = 'Release date is required'
   }
 
   return Object.keys(formErrors.value).length === 0
@@ -277,16 +286,16 @@ onMounted(loadReleases)
                   {{ release.title }}
                 </h3>
                 <span
-                  :class="['px-2 py-0.5 text-xs font-medium rounded', getTypeBadgeClass(release.type)]"
+                  :class="['px-2 py-0.5 text-xs font-medium rounded', getTypeBadgeClass(release.releaseType)]"
                 >
-                  {{ release.type }}
+                  {{ release.releaseType }}
                 </span>
               </div>
               <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">
-                {{ release.summary || release.content.substring(0, 150) + '...' }}
+                {{ release.content.substring(0, 150) + '...' }}
               </p>
               <p class="text-xs text-gray-500 dark:text-gray-500">
-                Released {{ formatDate(release.releaseDate) }}
+                Released {{ formatDate(release.releasedAt) }}
                 <span v-if="release.updatedAt !== release.createdAt">
                   · Updated {{ formatDate(release.updatedAt) }}
                 </span>
@@ -346,7 +355,7 @@ onMounted(loadReleases)
           class="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
           <div class="fixed inset-0 bg-black/50" @click="closeModals"></div>
-          <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+          <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
             <button
               type="button"
               class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -379,12 +388,12 @@ onMounted(loadReleases)
                 </div>
 
                 <div>
-                  <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label for="releaseType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Type
                   </label>
                   <select
-                    id="type"
-                    v-model="form.type"
+                    id="releaseType"
+                    v-model="form.releaseType"
                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     :disabled="isSubmitting"
                   >
@@ -414,49 +423,36 @@ onMounted(loadReleases)
 
               <!-- Release Date -->
               <div>
-                <label for="releaseDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label for="releasedAt" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Release Date <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="releaseDate"
-                  v-model="form.releaseDate"
+                  id="releasedAt"
+                  v-model="form.releasedAt"
                   type="date"
                   class="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  :class="formErrors.releaseDate ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'"
+                  :class="formErrors.releasedAt ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'"
                   :disabled="isSubmitting"
                 />
-                <p v-if="formErrors.releaseDate" class="mt-1 text-sm text-red-500">{{ formErrors.releaseDate }}</p>
-              </div>
-
-              <!-- Summary -->
-              <div>
-                <label for="summary" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Summary
-                </label>
-                <input
-                  id="summary"
-                  v-model="form.summary"
-                  type="text"
-                  placeholder="Brief summary (optional)"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  :disabled="isSubmitting"
-                />
+                <p v-if="formErrors.releasedAt" class="mt-1 text-sm text-red-500">{{ formErrors.releasedAt }}</p>
               </div>
 
               <!-- Content -->
               <div>
-                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Release Notes <span class="text-red-500">*</span>
                 </label>
-                <textarea
-                  id="content"
-                  v-model="form.content"
-                  rows="10"
-                  placeholder="Release notes content (Markdown supported)"
-                  class="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                  :class="formErrors.content ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'"
-                  :disabled="isSubmitting"
-                ></textarea>
+                <div :class="formErrors.content ? 'ring-2 ring-red-500 rounded-lg' : ''">
+                  <MdEditor
+                    v-model="form.content"
+                    :theme="editorTheme"
+                    language="en-US"
+                    :preview="true"
+                    :disabled="isSubmitting"
+                    :style="{ height: '350px' }"
+                    placeholder="Release notes content (Markdown supported)"
+                  />
+                </div>
                 <p v-if="formErrors.content" class="mt-1 text-sm text-red-500">{{ formErrors.content }}</p>
               </div>
 

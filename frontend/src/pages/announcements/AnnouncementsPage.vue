@@ -24,8 +24,8 @@ const pagination = ref({
 const categories = ['all', 'general', 'update', 'maintenance', 'security'] as const
 const selectedCategory = ref<string>('all')
 
-function getCategoryColor(category: Announcement['category']): string {
-  const colors = {
+function getCategoryColor(category: string): string {
+  const colors: Record<string, string> = {
     general: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
     update: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
     maintenance: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300',
@@ -159,15 +159,12 @@ onMounted(() => {
                 <span :class="['text-xs font-medium px-2 py-0.5 rounded', getCategoryColor(announcement.category)]">
                   {{ announcement.category }}
                 </span>
-                <span v-if="announcement.pinned" class="text-xs font-medium px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-                  Pinned
-                </span>
               </div>
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {{ announcement.title }}
               </h2>
               <p class="text-gray-600 dark:text-gray-400 line-clamp-2">
-                {{ announcement.summary || announcement.content.substring(0, 150) }}
+                {{ announcement.content.substring(0, 150) }}
               </p>
             </div>
             <time class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">

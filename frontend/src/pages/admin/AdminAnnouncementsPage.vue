@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import { useToast } from '@/composables/useToast'
+import { useThemeStore } from '@/stores/theme'
+import { MdEditor } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 import {
   getAnnouncements,
   createAnnouncement,
@@ -21,6 +24,15 @@ import {
 } from '@heroicons/vue/24/outline'
 
 const toast = useToast()
+const themeStore = useThemeStore()
+
+// Computed theme for markdown editor
+const editorTheme = computed(() => {
+  if (themeStore.mode === 'system') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+  return themeStore.mode
+})
 
 // List state
 const announcements = ref<Announcement[]>([])
@@ -43,9 +55,8 @@ const editingAnnouncement = ref<Announcement | null>(null)
 const form = ref<CreateAnnouncementRequest>({
   title: '',
   content: '',
-  summary: '',
   category: 'general',
-  pinned: false,
+  published: true,
 })
 const formErrors = ref<Record<string, string>>({})
 
@@ -87,9 +98,8 @@ function openCreateModal() {
   form.value = {
     title: '',
     content: '',
-    summary: '',
     category: 'general',
-    pinned: false,
+    published: true,
   }
   formErrors.value = {}
   showFormModal.value = true
@@ -100,9 +110,8 @@ function openEditModal(announcement: Announcement) {
   form.value = {
     title: announcement.title,
     content: announcement.content,
-    summary: announcement.summary || '',
     category: announcement.category,
-    pinned: announcement.pinned,
+    published: announcement.published,
   }
   formErrors.value = {}
   showFormModal.value = true
@@ -268,10 +277,10 @@ onMounted(loadAnnouncements)
                   {{ announcement.title }}
                 </h3>
                 <span
-                  v-if="announcement.pinned"
-                  class="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 rounded"
+                  v-if="!announcement.published"
+                  class="px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 rounded"
                 >
-                  Pinned
+                  Draft
                 </span>
                 <span
                   :class="['px-2 py-0.5 text-xs font-medium rounded', getCategoryBadgeClass(announcement.category)]"
@@ -280,7 +289,7 @@ onMounted(loadAnnouncements)
                 </span>
               </div>
               <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">
-                {{ announcement.summary || announcement.content.substring(0, 150) + '...' }}
+                {{ announcement.content.substring(0, 150) + '...' }}
               </p>
               <p class="text-xs text-gray-500 dark:text-gray-500">
                 Created {{ formatDate(announcement.createdAt) }}
@@ -343,7 +352,7 @@ onMounted(loadAnnouncements)
           class="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
           <div class="fixed inset-0 bg-black/50" @click="closeModals"></div>
-          <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+          <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
             <button
               type="button"
               class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -390,49 +399,36 @@ onMounted(loadAnnouncements)
                 </select>
               </div>
 
-              <!-- Summary -->
-              <div>
-                <label for="summary" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Summary
-                </label>
-                <input
-                  id="summary"
-                  v-model="form.summary"
-                  type="text"
-                  placeholder="Brief summary (optional)"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  :disabled="isSubmitting"
-                />
-              </div>
-
               <!-- Content -->
               <div>
-                <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Content <span class="text-red-500">*</span>
                 </label>
-                <textarea
-                  id="content"
-                  v-model="form.content"
-                  rows="8"
-                  placeholder="Announcement content (Markdown supported)"
-                  class="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                  :class="formErrors.content ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'"
-                  :disabled="isSubmitting"
-                ></textarea>
+                <div :class="formErrors.content ? 'ring-2 ring-red-500 rounded-lg' : ''">
+                  <MdEditor
+                    v-model="form.content"
+                    :theme="editorTheme"
+                    language="en-US"
+                    :preview="true"
+                    :disabled="isSubmitting"
+                    :style="{ height: '350px' }"
+                    placeholder="Announcement content (Markdown supported)"
+                  />
+                </div>
                 <p v-if="formErrors.content" class="mt-1 text-sm text-red-500">{{ formErrors.content }}</p>
               </div>
 
-              <!-- Pinned -->
+              <!-- Published -->
               <div class="flex items-center gap-2">
                 <input
-                  id="pinned"
-                  v-model="form.pinned"
+                  id="published"
+                  v-model="form.published"
                   type="checkbox"
                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   :disabled="isSubmitting"
                 />
-                <label for="pinned" class="text-sm text-gray-700 dark:text-gray-300">
-                  Pin this announcement
+                <label for="published" class="text-sm text-gray-700 dark:text-gray-300">
+                  Publish this announcement
                 </label>
               </div>
 
