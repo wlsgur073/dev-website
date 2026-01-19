@@ -2,6 +2,7 @@ package com.devwebsite.backend.billing.controller;
 
 import com.devwebsite.backend.billing.dto.ChangePlanRequest;
 import com.devwebsite.backend.billing.dto.SubscriptionResponse;
+import com.devwebsite.backend.billing.dto.UsageStatsResponse;
 import com.devwebsite.backend.billing.service.BillingService;
 import com.devwebsite.backend.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,5 +53,17 @@ public class SubscriptionController {
             @Valid @RequestBody ChangePlanRequest request) {
         SubscriptionResponse subscription = billingService.changePlan(user, request);
         return ResponseEntity.ok(subscription);
+    }
+
+    @GetMapping("/usage")
+    @Operation(summary = "Get usage statistics",
+            description = "Returns usage statistics for the current user. This is a stub implementation.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usage statistics retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated")
+    })
+    public ResponseEntity<UsageStatsResponse> getUsageStats(@AuthenticationPrincipal User user) {
+        // Stub implementation - returns default values
+        return ResponseEntity.ok(UsageStatsResponse.stub());
     }
 }

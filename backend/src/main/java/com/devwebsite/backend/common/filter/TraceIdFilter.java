@@ -17,8 +17,8 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceIdFilter extends OncePerRequestFilter {
 
-    public static final String TRACE_ID_HEADER = "X-Trace-Id";
-    public static final String TRACE_ID_MDC_KEY = "traceId";
+    public static final String TRACE_ID_HEADER = "X-Trace-Id"; // 커스텀 헤더 이름
+    public static final String TRACE_ID_MDC_KEY = "traceId"; // SLF4J MDC(Mapped Diagnostic Context)에 저장될 키 이름
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -26,7 +26,8 @@ public class TraceIdFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String traceId = request.getHeader(TRACE_ID_HEADER);
         if (traceId == null || traceId.isBlank()) {
-            traceId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+            // 32자리 16진수 UUID 생성
+            traceId = UUID.randomUUID().toString().replace("-", "");
         }
 
         MDC.put(TRACE_ID_MDC_KEY, traceId);
