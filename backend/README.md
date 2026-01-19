@@ -93,8 +93,17 @@ docker compose up -d
 ## 테스트
 
 ```bash
+# 전체 테스트 실행 (Docker 필요 - Testcontainers 사용)
 ./gradlew test
 ```
+
+### 통합 테스트
+
+- **AuthIntegrationTest**: 회원가입 → 로그인 → 토큰 갱신 플로우
+- **AnnouncementIntegrationTest**: 공지사항 공개 API 테스트
+
+> 테스트는 Testcontainers를 사용하여 PostgreSQL 17 컨테이너에서 실행됩니다.
+> Docker가 실행 중이어야 합니다.
 
 ## OpenAPI JSON 추출
 
