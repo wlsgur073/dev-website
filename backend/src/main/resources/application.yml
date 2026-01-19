@@ -3,6 +3,8 @@ spring:
     name: dev-website-backend
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  jmx:
+    enabled: false
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:devdb}
@@ -36,6 +38,9 @@ management:
     web:
       exposure:
         include: health,info
+    jmx:
+      exposure:
+        exclude: '*'
   endpoint:
     health:
       show-details: when_authorized
