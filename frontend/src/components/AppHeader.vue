@@ -84,7 +84,7 @@ async function handleLogout() {
                 :aria-expanded="isUserMenuOpen"
               >
                 <UserCircleIcon class="w-6 h-6" />
-                <span class="text-sm font-medium">{{ authStore.user?.name || 'User' }}</span>
+                <span class="text-sm font-medium">{{ authStore.user?.nickname || 'User' }}</span>
               </button>
 
               <div

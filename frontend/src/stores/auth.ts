@@ -6,8 +6,8 @@ import type { LoginRequest, RegisterRequest } from '@/api/auth'
 export interface User {
   id: number
   email: string
-  name: string
-  roles: string[]
+  nickname: string
+  role: string
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Getters
   const isAuthenticated = computed(() => !!accessToken.value)
-  const isAdmin = computed(() => user.value?.roles.includes('ROLE_ADMIN') ?? false)
+  const isAdmin = computed(() => user.value?.role === 'ROLE_ADMIN')
 
   // Actions
   function setAccessToken(token: string | null) {

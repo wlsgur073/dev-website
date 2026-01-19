@@ -41,8 +41,8 @@ function formatDate(dateString: string): string {
   })
 }
 
-function getCategoryColor(category: Announcement['category']): string {
-  const colors = {
+function getCategoryColor(category: string): string {
+  const colors: Record<string, string> = {
     general: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
     update: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
     maintenance: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300',
@@ -51,14 +51,14 @@ function getCategoryColor(category: Announcement['category']): string {
   return colors[category] || colors.general
 }
 
-function getReleaseTypeColor(type: Release['type']): string {
-  const colors = {
-    major: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
-    minor: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
-    patch: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
-    hotfix: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
+function getReleaseTypeColor(type: Release['releaseType']): string {
+  const colors: Record<string, string> = {
+    MAJOR: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
+    MINOR: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
+    PATCH: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300',
+    HOTFIX: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300',
   }
-  return colors[type] || colors.patch
+  return colors[type] || colors.PATCH
 }
 
 onMounted(async () => {
@@ -190,8 +190,8 @@ onMounted(async () => {
               class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-colors"
             >
               <div class="flex items-center gap-2 mb-2">
-                <span :class="['text-xs font-medium px-2 py-0.5 rounded', getReleaseTypeColor(release.type)]">
-                  {{ release.type }}
+                <span :class="['text-xs font-medium px-2 py-0.5 rounded', getReleaseTypeColor(release.releaseType)]">
+                  {{ release.releaseType }}
                 </span>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
                   v{{ release.version }}
@@ -201,10 +201,10 @@ onMounted(async () => {
                 {{ release.title }}
               </h3>
               <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {{ release.summary || release.content.substring(0, 100) }}
+                {{ release.content.substring(0, 100) }}
               </p>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">
-                {{ formatDate(release.releaseDate) }}
+                {{ formatDate(release.releasedAt) }}
               </p>
             </RouterLink>
           </template>
@@ -249,7 +249,7 @@ onMounted(async () => {
                 {{ announcement.title }}
               </h3>
               <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {{ announcement.summary || announcement.content.substring(0, 100) }}
+                {{ announcement.content.substring(0, 100) }}
               </p>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">
                 {{ formatDate(announcement.createdAt) }}

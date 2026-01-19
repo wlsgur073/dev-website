@@ -8,7 +8,7 @@ interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
 
 // Create axios instance
 const http = axios.create({
-  baseURL: '/api',
+  baseURL: '/api/v1',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ http.interceptors.response.use(
 
     try {
       // Call refresh endpoint - refresh token is sent via HttpOnly cookie
-      const response = await axios.post('/api/auth/refresh', {}, {
+      const response = await axios.post('/api/v1/auth/refresh', {}, {
         withCredentials: true,
       })
 

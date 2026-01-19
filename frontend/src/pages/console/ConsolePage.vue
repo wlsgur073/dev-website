@@ -63,7 +63,7 @@ onMounted(loadDashboardData)
       <!-- Welcome header -->
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-          Welcome back{{ authStore.user?.name ? `, ${authStore.user.name}` : '' }}
+          Welcome back{{ authStore.user?.nickname ? `, ${authStore.user.nickname}` : '' }}
         </h1>
         <p class="text-gray-600 dark:text-gray-400 mt-1">
           Here's an overview of your API usage and account.

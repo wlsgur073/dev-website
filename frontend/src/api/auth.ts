@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { post, get } from './http'
 import type { User } from '@/stores/auth'
 
@@ -35,10 +36,15 @@ export async function logout(): Promise<void> {
   return post<void>('/auth/logout')
 }
 
+// Use axios directly to bypass the 401 interceptor
+// The refresh endpoint itself should not trigger token refresh logic
 export async function refresh(): Promise<RefreshResponse> {
-  return post<RefreshResponse>('/auth/refresh')
+  const response = await axios.post<RefreshResponse>('/api/v1/auth/refresh', {}, {
+    withCredentials: true,
+  })
+  return response.data
 }
 
 export async function getCurrentUser(): Promise<User> {
-  return get<User>('/auth/me')
+  return get<User>('/me')
 }

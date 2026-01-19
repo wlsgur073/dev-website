@@ -1,6 +1,14 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
+
+const swaggerUiUrl = computed(() => {
+  // In development, link directly to backend server
+  // In production, use the configured API base URL or relative path
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+  return `${apiBaseUrl}/swagger-ui/index.html`
+})
 </script>
 
 <template>
@@ -20,7 +28,7 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
           see request/response schemas, and try out API calls directly.
         </p>
         <a
-          href="/api/swagger-ui.html"
+          :href="swaggerUiUrl"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-2 btn btn-primary"
