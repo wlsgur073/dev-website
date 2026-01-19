@@ -1,0 +1,28 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    defer-datasource-initialization: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+
+jwt:
+  secret: testSecretKeyForTestingOnlyMustBeAtLeast256BitsLongForHS256Algorithm
+  access-expiration-ms: 900000
+  refresh-expiration-ms: 1209600000
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+
+logging:
+  level:
+    com.devwebsite.backend: DEBUG
