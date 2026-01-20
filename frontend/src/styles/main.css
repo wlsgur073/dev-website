@@ -63,3 +63,26 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
+
+/* md-editor-v3 preview list styles (override Tailwind reset) */
+.md-editor .md-editor-preview ul:not(.md-editor-code-flag ul):not(.md-editor-codetab-label) {
+  list-style-type: disc !important;
+  margin: 0.5em 0;
+}
+
+.md-editor .md-editor-preview ol:not(.md-editor-code-flag ol) {
+  list-style-type: decimal !important;
+  margin: 0.5em 0;
+}
+
+.md-editor .md-editor-preview ul ul {
+  list-style-type: circle !important;
+}
+
+.md-editor .md-editor-preview ul ul ul {
+  list-style-type: square !important;
+}
+
+.md-editor .md-editor-preview li:not(.task-list-item) {
+  display: list-item;
+}
